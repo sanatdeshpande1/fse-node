@@ -13,7 +13,7 @@ import MessageController from "./controllers/MessageController";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 
-const connectionString = `mongodb+srv://sanatd:cs5500password@cs5500.z1jwb.mongodb.net/cs5500?retryWrites=true&w=majority`;
+const connectionString = `mongodb+srv://sanatd:cs5500password@cs5500.z1jwb.mongodb.net/cs5500_a2?retryWrites=true&w=majority`;
 mongoose.connect(connectionString);
 
 const app = express();
