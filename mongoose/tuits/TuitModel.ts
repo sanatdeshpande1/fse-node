@@ -1,3 +1,6 @@
+/**
+ * @file The file represent mongoose model for Tuit from Tuit schema.
+ */
 import mongoose from "mongoose";
 import TuitSchema from "./TuitSchema";
 const TuitModel = mongoose.model("TuitModel", TuitSchema);
