@@ -1,6 +1,14 @@
 /**
- * @file Represents the main server responsible for initializing controllers for various
- *       database operations.
+ * @file Implements an Express Node HTTP server. Declares RESTful Web services
+ * enabling CRUD operations on the following resources:
+ * <ul>
+ *     <li>users</li>
+ *     <li>tuits</li>
+ *     <li>likes</li>
+ * </ul>
+ *
+ * Connects to a remote MongoDB instance hosted on the Atlas cloud database
+ * service
  */
 import express, { Request, Response } from "express";
 import UserController from "./controllers/UserController";
@@ -13,7 +21,7 @@ import MessageController from "./controllers/MessageController";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 
-const connectionString = `mongodb+srv://sanatd:cs5500password@cs5500.z1jwb.mongodb.net/cs5500_a2?retryWrites=true&w=majority`;
+const connectionString = `mongodb+srv://sanatd:cs5500password@cs5500.z1jwb.mongodb.net/cs5500?retryWrites=true&w=majority`;
 mongoose.connect(connectionString);
 
 const app = express();
@@ -36,5 +44,9 @@ const followController = FollowController.getInstance(app);
 const bookmarkController = BookmarkController.getInstance(app);
 const messageController = MessageController.getInstance(app);
 
+/**
+ * Start a server listening at port 4000 locally
+ * but use environment variable PORT on Heroku if available.
+ */
 const PORT = 4000;
 app.listen(process.env.PORT || PORT);
