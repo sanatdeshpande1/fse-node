@@ -6,11 +6,11 @@
  *     <li>tuits</li>
  *     <li>likes</li>
  * </ul>
- * 
+ *
  * Connects to a remote MongoDB instance hosted on the Atlas cloud database
  * service
  */
-import express, {Request, Response} from 'express';
+import express, { Request, Response } from "express";
 import CourseController from "./controllers/CourseController";
 import UserController from "./controllers/UserController";
 import TuitController from "./controllers/TuitController";
@@ -30,38 +30,41 @@ const HOST = "cluster0.m8jeh.mongodb.net";
 const DB_NAME = "myFirstDatabase";
 const DB_QUERY = "retryWrites=true&w=majority";
 // const connectionString = `${PROTOCOL}://${DB_USERNAME}:${DB_PASSWORD}@${HOST}/${DB_NAME}?${DB_QUERY}`;// connect to the database
-const connectionString = `${PROTOCOL}://${DB_USERNAME}:${DB_PASSWORD}@${HOST}/${DB_NAME}?${DB_QUERY}`;// connect to the database
+// const connectionString = `${PROTOCOL}://${DB_USERNAME}:${DB_PASSWORD}@${HOST}/${DB_NAME}?${DB_QUERY}`;// connect to the database
+const connectionString = `mongodb+srv://sanatd:cs5500password@cs5500.z1jwb.mongodb.net/cs5500_a4?retryWrites=true&w=majority`;
 mongoose.connect(connectionString);
 
 const app = express();
-app.use(cors({
+app.use(
+  cors({
     credentials: true,
-    origin: 'http://localhost:3000'
-}));
+    origin: "http://localhost:3000",
+  })
+);
 
-const SECRET = 'process.env.SECRET';
+const SECRET = "process.env.SECRET";
 let sess = {
-    secret: SECRET,
-    saveUninitialized: true,
-    resave: true,
-    cookie: {
-        secure: false
-    }
+  secret: SECRET,
+  saveUninitialized: true,
+  resave: true,
+  cookie: {
+    secure: false,
+  },
+};
+
+if (process.env.ENVIRONMENT === "PRODUCTION") {
+  app.set("trust proxy", 1); // trust first proxy
+  sess.cookie.secure = true; // serve secure cookies
 }
 
-if (process.env.ENVIRONMENT === 'PRODUCTION') {
-    app.set('trust proxy', 1) // trust first proxy
-    sess.cookie.secure = true // serve secure cookies
-}
-
-app.use(session(sess))
+app.use(session(sess));
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) =>
-    res.send('Welcome!'));
+app.get("/", (req: Request, res: Response) => res.send("Welcome!"));
 
-app.get('/add/:a/:b', (req: Request, res: Response) =>
-    res.send(req.params.a + req.params.b));
+app.get("/add/:a/:b", (req: Request, res: Response) =>
+  res.send(req.params.a + req.params.b)
+);
 
 // create RESTful Web service API
 const courseController = new CourseController(app);
