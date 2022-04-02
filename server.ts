@@ -17,6 +17,7 @@ import TuitController from "./controllers/TuitController";
 import LikeController from "./controllers/LikeController";
 import SessionController from "./controllers/SessionController";
 import AuthenticationController from "./controllers/AuthenticationController";
+import DislikeController from "./controllers/DislikeController";
 import mongoose from "mongoose";
 import GroupController from "./controllers/GroupController";
 const cors = require("cors");
@@ -31,7 +32,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", 'http://localhost'],
   })
 );
 
@@ -40,9 +41,10 @@ let sess = {
   secret: SECRET,
   saveUninitialized: true,
   resave: true,
-  cookie: {
-    secure: false,
-  },
+    cookie: {
+        sameSite: process.env.NODE_ENV === "PRODUCTION" ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === "PRODUCTION",
+    }
 };
 
 if (process.env.ENVIRONMENT === "PRODUCTION") {
@@ -64,6 +66,7 @@ const courseController = new CourseController(app);
 const userController = UserController.getInstance(app);
 const tuitController = TuitController.getInstance(app);
 const likesController = LikeController.getInstance(app);
+const dislikesController = DislikeController.getInstance(app);
 SessionController(app);
 AuthenticationController(app);
 GroupController(app);
