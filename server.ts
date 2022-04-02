@@ -32,7 +32,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", 'http://localhost'],
+    origin: ["http://localhost:3000", 'http://localhost', "https://a4--agitated-feynman-8b9e83.netlify.app"],
   })
 );
 
