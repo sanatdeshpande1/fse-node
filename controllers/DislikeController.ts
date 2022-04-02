@@ -71,13 +71,23 @@ import TuitDao from "../daos/TuitDao";
          const profile = req.session['profile'];
          const userId = uid === "me" && profile ?
              profile._id : uid;
- 
-         DislikeController.dislikeDao.findAllTuitsDislikedByUser(userId)
-             .then(dislikes => {
-                 const dislikesNonNullTuits = dislikes.filter(dislike => dislike.tuit);
-                 const tuitsFromDislikes = dislikesNonNullTuits.map(dislike => dislike.tuit);
-                 res.json(tuitsFromDislikes);
-             });
+        
+             if (userId === "me") {
+                res.sendStatus(503);
+                return;
+              }
+         try {
+            DislikeController.dislikeDao.findAllTuitsDislikedByUser(userId)
+            .then(dislikes => {
+                const dislikesNonNullTuits = dislikes.filter(dislike => dislike.tuit);
+                const tuitsFromDislikes = dislikesNonNullTuits.map(dislike => dislike.tuit);
+                res.json(tuitsFromDislikes);
+            });
+         }
+         catch (error) {
+             console.log(error);
+         }
+         
      }
  
      
@@ -98,6 +108,11 @@ import TuitDao from "../daos/TuitDao";
          const profile = req.session['profile'];
          const userId = uid === "me" && profile ?
              profile._id : uid;
+         
+             if (userId === "me") {
+                res.sendStatus(503);
+                return;
+              }
          try {
              const userAlreadyDislikedTuit = await dislikeDao.findUserDislikesTuit(userId, tid);
              const howManyDislikedTuit = await dislikeDao.countHowManyDislikedTuit(tid);

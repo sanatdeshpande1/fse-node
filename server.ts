@@ -32,7 +32,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", 'http://localhost'],
   })
 );
 
@@ -41,9 +41,10 @@ let sess = {
   secret: SECRET,
   saveUninitialized: true,
   resave: true,
-  cookie: {
-    secure: false,
-  },
+    cookie: {
+        sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === "production",
+    }
 };
 
 if (process.env.ENVIRONMENT === "PRODUCTION") {
